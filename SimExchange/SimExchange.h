@@ -6,6 +6,7 @@
 class SimExchange : public MDSubscriber
 {
 public:
+    // 指定交易手续费率
     SimExchange(double feeRate);
     void Subscribe(std::shared_ptr<TradeSubscriber> sub);
     void OnBacktestInit() override {};
@@ -16,7 +17,9 @@ public:
     void OnMDUpdate(const DailyData& marketData) override;
 
 public:
-    void OrderInsert(Order& order);
+    void OrderInsert(const Order& order);
+    // bool OrderCancel()
+    double GetFeeRate();
 private:
     void PublishTrade(Trade& trade);
     Trade BuildTradeFromOrder(const Order& order, const DailyData& marketData);

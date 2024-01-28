@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-o3 ${CMAKE_CXX_FLAGS}")
 # 三方库
 find_package(spdlog REQUIRED)
 # 路径设置
-get_filename_component(RootDir "${CMAKE_CURRENT_LIST_DIR}/Statistic" DIRECTORY)
+get_filename_component(RootDir "${CMAKE_CURRENT_LIST_DIR}/question2" DIRECTORY)
 set(EXECUTABLE_OUTPUT_PATH ${RootDir}/bin)
 set(LIBRARY_OUTPUT_PATH ${RootDir}/lib)
 # 头文件、库文件搜索路径
@@ -22,3 +22,4 @@ aux_source_directory(${RootDir}/Strategy src)
 aux_source_directory(${RootDir}/Test src)
 
 add_executable(backtest ${src})
+target_link_libraries(backtest pthread dl)

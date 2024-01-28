@@ -9,47 +9,38 @@
 class TestStrategy : public StrategyBase
 {
 public:
-    TestStrategy(std::shared_ptr<SimExchange> exchange)
-    : StrategyBase(exchange)
+    TestStrategy(double limit, int initialCapital, std::shared_ptr<SimExchange> exchange)
+    : StrategyBase(limit, initialCapital, exchange)
     {
         srand((unsigned)time(nullptr));
     }
-    void OnBacktestInit() override
+    void OnBacktestInit() override final
     {
-
+        StrategyBase::OnBacktestInit();
     }
 
     void OnBacktestStart() override
     {
-
+        StrategyBase::OnBacktestStart();
     }
     void OnBacktestEnd() override
     {
-
+        StrategyBase::OnBacktestEnd();
     }
-    
+    // 策略逻辑：
+    // 获取随机数，为0时按收盘价下买单，为1时按收盘价下卖单
     void OnMDUpdate(const DailyData& marketData) override
     {
-        INFO("{}", marketData.date);
+        StrategyBase::OnMDUpdate(marketData);
+        // INFO("{}", marketData.date);
         int tossCoin = rand() % 3;
         if (tossCoin == 0)
-        {
-            Order order;
-            
-            order.direction = DirectionType::Buy;
-            order.price = 1.5;
-            order.volume = 100;
-            order.signal = tossCoin;
-            exchange->OrderInsert(order);
+        {            
+            OrderInsert(marketData.date, DirectionType::Buy, marketData.close, 100, tossCoin);
         }
         else if (tossCoin == 1)
         {
-            Order order;
-            order.direction = DirectionType::Sell;
-            order.price = 1.5;
-            order.volume = 100;
-            order.signal = tossCoin;
-            exchange->OrderInsert(order);
+            OrderInsert(marketData.date, DirectionType::Sell, marketData.close, 100, tossCoin);
         }
         else 
         {
@@ -58,6 +49,7 @@ public:
     }
     void OnRtnTrade(const Trade& trade) override
     {
+        StrategyBase::OnRtnTrade(trade);
 
     }
 

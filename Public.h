@@ -19,6 +19,8 @@ struct DailyData
 
 struct Order
 {
+    uint32_t orderID;
+    std::string date;
     DirectionType direction;
     double price;
     double volume;
@@ -28,6 +30,7 @@ struct Order
 
 struct Trade
 {
+    uint32_t orderID;
     std::string date;
     DirectionType direction;
     double price;

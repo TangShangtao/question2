@@ -41,9 +41,14 @@ void SimExchange::OnMDUpdate(const DailyData& marketData)
 }
 
 
-void SimExchange::OrderInsert(Order& order)
+void SimExchange::OrderInsert(const Order& order)
 {
     orderQue.push_back(order);
+}
+
+double SimExchange::GetFeeRate() 
+{
+    return feeRate;
 }
 
 void SimExchange::PublishTrade(Trade& trade)
@@ -57,6 +62,7 @@ void SimExchange::PublishTrade(Trade& trade)
 Trade SimExchange::BuildTradeFromOrder(const Order& order, const DailyData& marketData)
 {
     Trade trade;
+    trade.orderID = order.orderID;
     trade.date = marketData.date;
     trade.direction = order.direction;
     trade.price = marketData.close;

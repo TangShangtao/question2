@@ -8,21 +8,34 @@
 class StrategyBase : public MDSubscriber, public TradeSubscriber
 {
 public:
-    virtual void OnBacktestInit() = 0;
+    void OnBacktestInit() override;
 
-    virtual void OnBacktestStart() = 0;
-    virtual void OnBacktestEnd() = 0;
+    void OnBacktestStart() override;
+    void OnBacktestEnd() override;
     
-    virtual void OnMDUpdate(const DailyData& marketData) = 0;
-    virtual void OnRtnTrade(const Trade& trade) = 0;
+    void OnMDUpdate(const DailyData& marketData) override;
+    void OnRtnTrade(const Trade& trade) override;
 
     virtual ~StrategyBase() {}
 
 public:
-    StrategyBase(std::shared_ptr<SimExchange> exchange)
-        : exchange(exchange)
+    // 涨跌幅限制、初始资金、模拟交易所接口
+    StrategyBase(double limit, int initialCapital, std::shared_ptr<SimExchange> exchange)
+        : limit(limit), initialCapital(initialCapital), currentCapital(initialCapital), exchange(exchange)
     {
     }
+    // 资金不足、股票不足、超出涨跌停限制时，无法下单
+    bool OrderInsert(const std::string& date, DirectionType direction, double price, double volume, int signal);
+    int currentCapital;
 protected:
+    double limit;
+    int initialCapital;
+    // int currentCapital;
+    int currentStock = 0;
+    uint32_t currentOrderID = 0;
+private:
     std::shared_ptr<SimExchange> exchange;
+    double upLimit = 0;     // 涨幅限制
+    double downLimit = 0;   // 跌幅限制
+    double todayClose = 0;  // 今日收盘价
 };
